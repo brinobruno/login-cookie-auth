@@ -3,7 +3,7 @@ const express = require('express')
 const router = express.Router()
 
 // check if user is logged in (by cookie)
-app.get('/', (request, response) => {
+router.get('/', (request, response) => {
   const username = request.cookies.username
 
   // render home page
@@ -13,8 +13,8 @@ app.get('/', (request, response) => {
 })
 
 // check if there's a query
-app.get('/login', (request, response) => {
-  let badAuth = request.query.attempt ? true : false
+router.get('/login', (request, response) => {
+  let badAuth = request.query.msg ? true : false
 
   if (badAuth) {
     return response.render('login', {
@@ -29,7 +29,7 @@ app.get('/login', (request, response) => {
 })
 
 // get username from cookies and render
-app.get('/welcome', (request, response) => {
+router.get('/welcome', (request, response) => {
   const username = request.cookies.username;
 
   return response.render('welcome', {
@@ -38,10 +38,11 @@ app.get('/welcome', (request, response) => {
 })
 
 // check login and sabe data to cookies
-app.post('/process_login', (request, response) => {
+router.post('/process_login', (request, response) => {
   const { username, password } = request.body
 
   // fake test data
+  // use this to login
   const userDetails = {
     username: 'brunodev',
     password: '00000000',
@@ -60,12 +61,12 @@ app.post('/process_login', (request, response) => {
   
   else {
     // redirect with a fail message
-    return response.redirect('/login?attempt=fail')
+    return response.redirect('/login?msg=fail')
   }
 })
 
 // clear cookie and redirect
-app.get('/logout', (request, response) => {
+router.get('/logout', (request, response) => {
   response.clearCookie('username')
   return response.redirect('/login')
 })
